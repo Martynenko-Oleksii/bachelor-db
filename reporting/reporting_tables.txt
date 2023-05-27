@@ -45,8 +45,9 @@ GO
 
 CREATE TABLE [dbo].[reports_users](
 	[user_id] [int] NOT NULL,
-	[report_id] [int] NOT NULL
-) 
+	[report_id] [int] NOT NULL,
+ CONSTRAINT [PK_reports_users] PRIMARY KEY ([user_id] ASC, [report_id] ASC)
+)
 GO
 
 CREATE TABLE [dbo].[statuses](
@@ -73,8 +74,9 @@ GO
 
 CREATE TABLE [dbo].[templates_users](
 	[user_id] [nchar](36) NOT NULL,
-	[template_id] [int] NOT NULL
-) 
+	[template_id] [int] NOT NULL,
+ CONSTRAINT [PK_templates_users] PRIMARY KEY ([user_id] ASC, [template_id] ASC)
+)
 GO
 
 ALTER TABLE [dbo].[queues]  WITH CHECK ADD  CONSTRAINT [FK_queues_statuses] FOREIGN KEY([status_id])
