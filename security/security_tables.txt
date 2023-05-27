@@ -1,12 +1,6 @@
 USE [security]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[contracts](
 	[contract_id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [nvarchar](64) NOT NULL,
@@ -27,11 +21,6 @@ CREATE TABLE [dbo].[customers](
 	[expiring_date] [date] NOT NULL,
  CONSTRAINT [PK_customer] PRIMARY KEY ([customer_id] ASC)
 ) 
-GO
-
-ALTER TABLE [dbo].[customers]  WITH CHECK ADD  CONSTRAINT [FK_customers_contracts] FOREIGN KEY([contract_id])
-REFERENCES [dbo].[contracts] ([contract_id])
-ON DELETE SET NULL
 GO
 
 CREATE TABLE [dbo].[department_groups](
@@ -58,41 +47,16 @@ CREATE TABLE [dbo].[facilities](
 ) 
 GO
 
-ALTER TABLE [dbo].[facilities]  WITH CHECK ADD  CONSTRAINT [FK_facilities_customers] FOREIGN KEY([customer_id])
-REFERENCES [dbo].[customers] ([customer_id])
-ON DELETE CASCADE
-GO
-
 CREATE TABLE [dbo].[facilities_facility_groups](
 	[facility_group_id] [int] NOT NULL,
 	[facility_id] [int] NOT NULL
 )
 GO
 
-ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facilities] FOREIGN KEY([facility_id])
-REFERENCES [dbo].[facilities] ([facility_id])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facility_groups] FOREIGN KEY([facility_group_id])
-REFERENCES [dbo].[facility_groups] ([facility_group_id])
-ON DELETE CASCADE
-GO
-
 CREATE TABLE [dbo].[facilities_standart_departments](
 	[facility_id] [int] NOT NULL,
 	[standart_department_id] [int] NOT NULL
 ) 
-GO
-
-ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_facilities] FOREIGN KEY([facility_id])
-REFERENCES [dbo].[facilities] ([facility_id])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_standart_departments] FOREIGN KEY([standart_department_id])
-REFERENCES [dbo].[standart_departments] ([standart_department_id])
-ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[facility_groups](
@@ -118,6 +82,36 @@ CREATE TABLE [dbo].[standart_departments_groups](
 )
 GO
 
+ALTER TABLE [dbo].[customers]  WITH CHECK ADD  CONSTRAINT [FK_customers_contracts] FOREIGN KEY([contract_id])
+REFERENCES [dbo].[contracts] ([contract_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[facilities]  WITH CHECK ADD  CONSTRAINT [FK_facilities_customers] FOREIGN KEY([customer_id])
+REFERENCES [dbo].[customers] ([customer_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facilities] FOREIGN KEY([facility_id])
+REFERENCES [dbo].[facilities] ([facility_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facility_groups] FOREIGN KEY([facility_group_id])
+REFERENCES [dbo].[facility_groups] ([facility_group_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_facilities] FOREIGN KEY([facility_id])
+REFERENCES [dbo].[facilities] ([facility_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_standart_departments] FOREIGN KEY([standart_department_id])
+REFERENCES [dbo].[standart_departments] ([standart_department_id])
+ON DELETE CASCADE
+GO
+
 ALTER TABLE [dbo].[standart_departments_groups]  WITH CHECK ADD  CONSTRAINT [FK_standart_departments_groups_department_groups] FOREIGN KEY([department_group_id])
 REFERENCES [dbo].[department_groups] ([department_group_id])
 ON DELETE CASCADE
@@ -127,4 +121,3 @@ ALTER TABLE [dbo].[standart_departments_groups]  WITH CHECK ADD  CONSTRAINT [FK_
 REFERENCES [dbo].[standart_departments] ([standart_department_id])
 ON DELETE CASCADE
 GO
-
