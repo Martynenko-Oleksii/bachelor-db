@@ -44,7 +44,7 @@ CREATE TABLE [dbo].[reports](
 GO
 
 CREATE TABLE [dbo].[reports_users](
-	[user_id] [int] NOT NULL,
+	[user_id] [nchar](36) NOT NULL,
 	[report_id] [int] NOT NULL,
  CONSTRAINT [PK_reports_users] PRIMARY KEY ([user_id] ASC, [report_id] ASC)
 )
