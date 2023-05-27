@@ -1,0 +1,130 @@
+USE [security]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[contracts](
+	[contract_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+	[duration] [tinyint] NOT NULL,
+	[start] [tinyint] NOT NULL,
+ CONSTRAINT [PK_contracts] PRIMARY KEY ([contract_id] ASC)
+)
+GO
+
+CREATE TABLE [dbo].[customers](
+	[customer_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+	[contract_id] [int] NULL,
+	[activation_date] [date] NOT NULL,
+	[auto_renewal] [bit] NOT NULL,
+	[expiring_date] [date] NOT NULL,
+ CONSTRAINT [PK_customer] PRIMARY KEY ([customer_id] ASC)
+) 
+GO
+
+ALTER TABLE [dbo].[customers]  WITH CHECK ADD  CONSTRAINT [FK_customers_contracts] FOREIGN KEY([contract_id])
+REFERENCES [dbo].[contracts] ([contract_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[department_groups](
+	[department_group_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+	[customer_id] [int] NOT NULL,
+ CONSTRAINT [PK_department_groups] PRIMARY KEY ([department_group_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[facilities](
+	[facility_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[abbreviation] [nvarchar](16) NOT NULL,
+	[ZIP_code] [nchar](10) NOT NULL,
+	[address_1] [nvarchar](128) NOT NULL,
+	[address_2] [nvarchar](128) NULL,
+	[city] [nvarchar](16) NOT NULL,
+	[contact_phone] [nchar](15) NOT NULL,
+	[contact_email] [nvarchar](64) NOT NULL,
+	[customer_id] [int] NOT NULL,
+ CONSTRAINT [PK_facilities] PRIMARY KEY ([facility_id] ASC)
+) 
+GO
+
+ALTER TABLE [dbo].[facilities]  WITH CHECK ADD  CONSTRAINT [FK_facilities_customers] FOREIGN KEY([customer_id])
+REFERENCES [dbo].[customers] ([customer_id])
+ON DELETE CASCADE
+GO
+
+CREATE TABLE [dbo].[facilities_facility_groups](
+	[facility_group_id] [int] NOT NULL,
+	[facility_id] [int] NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facilities] FOREIGN KEY([facility_id])
+REFERENCES [dbo].[facilities] ([facility_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_facility_groups]  WITH CHECK ADD  CONSTRAINT [FK_facilities_facility_groups_facility_groups] FOREIGN KEY([facility_group_id])
+REFERENCES [dbo].[facility_groups] ([facility_group_id])
+ON DELETE CASCADE
+GO
+
+CREATE TABLE [dbo].[facilities_standart_departments](
+	[facility_id] [int] NOT NULL,
+	[standart_department_id] [int] NOT NULL
+) 
+GO
+
+ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_facilities] FOREIGN KEY([facility_id])
+REFERENCES [dbo].[facilities] ([facility_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facilities_standart_departments]  WITH CHECK ADD  CONSTRAINT [FK_facilities_standart_departments_standart_departments] FOREIGN KEY([standart_department_id])
+REFERENCES [dbo].[standart_departments] ([standart_department_id])
+ON DELETE CASCADE
+GO
+
+CREATE TABLE [dbo].[facility_groups](
+	[facility_group_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+	[customer_id] [int] NOT NULL,
+ CONSTRAINT [PK_facility_group] PRIMARY KEY  ([facility_group_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[standart_departments](
+	[standart_department_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+ CONSTRAINT [PK_standart_department] PRIMARY KEY ([standart_department_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[standart_departments_groups](
+	[department_group_id] [int] NOT NULL,
+	[standart_department_id] [int] NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[standart_departments_groups]  WITH CHECK ADD  CONSTRAINT [FK_standart_departments_groups_department_groups] FOREIGN KEY([department_group_id])
+REFERENCES [dbo].[department_groups] ([department_group_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[standart_departments_groups]  WITH CHECK ADD  CONSTRAINT [FK_standart_departments_groups_standart_departments] FOREIGN KEY([standart_department_id])
+REFERENCES [dbo].[standart_departments] ([standart_department_id])
+ON DELETE CASCADE
+GO
+

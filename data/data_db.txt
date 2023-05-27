@@ -1,0 +1,6 @@
+USE [master]
+GO
+
+CREATE DATABASE [data]
+ CONTAINMENT = NONE
+GO

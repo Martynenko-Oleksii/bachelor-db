@@ -1,0 +1,67 @@
+USE [file]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[file_mappings](
+	[file_mapping_id] [int] IDENTITY(1,1) NOT NULL,
+	[file_type_id] [int] NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+	[mapping_json] [nvarchar](max) NOT NULL,
+	[created_under] [int] NOT NULL,
+	[created_by] [nchar](36) NOT NULL,
+ CONSTRAINT [PK_file_mappings] PRIMARY KEY ([file_mapping_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[file_mappings]  WITH CHECK ADD  CONSTRAINT [FK_file_mappings_file_types] FOREIGN KEY([file_type_id])
+REFERENCES [dbo].[file_types] ([file_type_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[file_types](
+	[file_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK_file_types] PRIMARY KEY ([file_type_id] ASC)
+)
+GO
+
+CREATE TABLE [dbo].[files](
+	[file_id] [int] IDENTITY(1,1) NOT NULL,
+	[file_path] [nvarchar](128) NOT NULL,
+	[file_mapping_id] [int] NULL,
+	[upload_by] [nchar](36) NOT NULL,
+ CONSTRAINT [PK_files] PRIMARY KEY ([file_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[files]  WITH CHECK ADD  CONSTRAINT [FK_files_file_mappings] FOREIGN KEY([file_mapping_id])
+REFERENCES [dbo].[file_mappings] ([file_mapping_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[upload_logs](
+	[upload_log_id] [int] IDENTITY(1,1) NOT NULL,
+	[fyle_type_id] [int] NULL,
+	[file_name] [nvarchar](64) NOT NULL,
+	[mapping_name] [nvarchar](64) NOT NULL,
+	[lines_count] [int] NOT NULL,
+	[error_lines_count] [int] NOT NULL,
+	[status] [nvarchar](16) NOT NULL,
+	[upload_by] [nchar](36) NOT NULL,
+	[upload_date] [date] NOT NULL,
+	[facility_id] [int] NOT NULL,
+	[time_period] [nvarchar](16) NOT NULL,
+ CONSTRAINT [PK_upload_logs] PRIMARY KEY ([upload_log_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[upload_logs]  WITH CHECK ADD  CONSTRAINT [FK_upload_logs_file_types] FOREIGN KEY([fyle_type_id])
+REFERENCES [dbo].[file_types] ([file_type_id])
+ON DELETE SET NULL
+GO

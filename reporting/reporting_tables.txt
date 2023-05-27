@@ -1,0 +1,124 @@
+USE [reporting]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[queues](
+	[queue_id] [int] IDENTITY(1,1) NOT NULL,
+	[queue_type] [bit] NOT NULL,
+	[mongo_id] [nchar](24) NOT NULL,
+	[status_id] [int] NULL,
+	[entity_id] [int] NOT NULL,
+ CONSTRAINT [PK_queue] PRIMARY KEY ([queue_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[queues]  WITH CHECK ADD  CONSTRAINT [FK_queues_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[queues_archive](
+	[queue_id] [int] IDENTITY(1,1) NOT NULL,
+	[queue_type] [bit] NOT NULL,
+	[mongo_id] [nchar](24) NOT NULL,
+	[status_id] [int] NULL,
+	[entity_id] [int] NOT NULL,
+ CONSTRAINT [PK_queues_archive] PRIMARY KEY ([queue_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[queues_archive]  WITH CHECK ADD  CONSTRAINT [FK_queues_archive_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[report_types](
+	[report_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+ CONSTRAINT [PK_report_types] PRIMARY KEY ([report_type_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[reports](
+	[report_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[last_modification] [date] NOT NULL,
+	[mongo_id] [nchar](24) NOT NULL,
+	[status_id] [int] NULL,
+	[created_by] [nchar](36) NOT NULL,
+	[owned_by] [nchar](36) NOT NULL,
+	[created_under] [int] NOT NULL,
+	[template_mongo_id] [nchar](24) NOT NULL,
+	[report_type_id] [int] NULL,
+ CONSTRAINT [PK_reports] PRIMARY KEY  ([report_id] ASC)
+) 
+GO
+
+ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_report_types] FOREIGN KEY([report_type_id])
+REFERENCES [dbo].[report_types] ([report_type_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[reports_users](
+	[user_id] [int] NOT NULL,
+	[report_id] [int] NOT NULL
+) 
+GO
+
+ALTER TABLE [dbo].[reports_users]  WITH CHECK ADD  CONSTRAINT [FK_reports_users_reports] FOREIGN KEY([report_id])
+REFERENCES [dbo].[reports] ([report_id])
+ON DELETE CASCADE
+GO
+
+CREATE TABLE [dbo].[statuses](
+	[status_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[description] [nvarchar](256) NULL,
+ CONSTRAINT [PK_statuses] PRIMARY KEY ([status_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[templates](
+	[template_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[last_modification] [date] NOT NULL,
+	[mongo_id] [nchar](24) NOT NULL,
+	[status_id] [int] NULL,
+	[created_by] [nchar](36) NULL,
+	[owned_by] [nchar](36) NULL,
+	[created_under] [int] NOT NULL,
+	[report_type_id] [int] NULL,
+ CONSTRAINT [PK_templates] PRIMARY KEY ([template_id] ASC)
+) 
+GO
+
+ALTER TABLE [dbo].[templates]  WITH CHECK ADD  CONSTRAINT [FK_templates_report_types] FOREIGN KEY([report_type_id])
+REFERENCES [dbo].[report_types] ([report_type_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[templates]  WITH CHECK ADD  CONSTRAINT [FK_templates_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+CREATE TABLE [dbo].[templates_users](
+	[user_id] [nchar](36) NOT NULL,
+	[template_id] [int] NOT NULL
+) 
+GO
+
+ALTER TABLE [dbo].[templates_users]  WITH CHECK ADD  CONSTRAINT [FK_templates_users_templates] FOREIGN KEY([template_id])
+REFERENCES [dbo].[templates] ([template_id])
+ON DELETE CASCADE
+GO

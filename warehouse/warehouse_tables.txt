@@ -1,0 +1,78 @@
+USE [warehouse]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[department_instance](
+	[department_instance_id] [int] IDENTITY(1,1) NOT NULL,
+	[standart_department_name] [nvarchar](64) NOT NULL,
+	[name] [nvarchar](128) NOT NULL,
+	[short_name] [nvarchar](32) NOT NULL,
+	[CC_name] [nvarchar](128) NOT NULL,
+ CONSTRAINT [PK_department_instance] PRIMARY KEY([department_instance_id] ASC)
+)
+GO
+
+CREATE TABLE [dbo].[facilities](
+	[facility_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+	[abbreviation] [nvarchar](16) NOT NULL,
+	[ZIP_code] [nchar](10) NOT NULL,
+	[address_1] [nvarchar](128) NOT NULL,
+	[address_2] [nvarchar](128) NULL,
+	[city] [nvarchar](16) NOT NULL,
+	[contact_phone] [nchar](15) NOT NULL,
+	[contact_email] [nvarchar](64) NOT NULL,
+ CONSTRAINT [PK_facilities] PRIMARY KEY ([facility_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[facts](
+	[time_period_id] [int] NOT NULL,
+	[facility_id] [int] NOT NULL,
+	[measure_id] [int] NOT NULL,
+	[department_id] [int] NOT NULL,
+	[value] [float] NOT NULL
+) 
+GO
+
+ALTER TABLE [dbo].[facts]  WITH CHECK ADD  CONSTRAINT [FK_facts_department_instance] FOREIGN KEY([department_id])
+REFERENCES [dbo].[department_instance] ([department_instance_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facts]  WITH CHECK ADD  CONSTRAINT [FK_facts_facilities] FOREIGN KEY([facility_id])
+REFERENCES [dbo].[facilities] ([facility_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facts]  WITH CHECK ADD  CONSTRAINT [FK_facts_measures] FOREIGN KEY([measure_id])
+REFERENCES [dbo].[measures] ([measure_id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[facts]  WITH CHECK ADD  CONSTRAINT [FK_facts_time_periods] FOREIGN KEY([time_period_id])
+REFERENCES [dbo].[time_periods] ([time_period_id])
+ON DELETE CASCADE
+GO
+
+CREATE TABLE [dbo].[measures](
+	[measure_id] [int] IDENTITY(1,1) NOT NULL,
+	[department_element_name] [nvarchar](64) NOT NULL,
+ CONSTRAINT [PK_measures] PRIMARY KEY ([measure_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[time_periods](
+	[time_period_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](128) NOT NULL,
+	[short_name] [nvarchar](38) NOT NULL,
+	[start_date] [date] NOT NULL,
+	[end_date] [date] NOT NULL,
+ CONSTRAINT [PK_time_periods] PRIMARY KEY ([time_period_id] ASC)
+) 
+GO
