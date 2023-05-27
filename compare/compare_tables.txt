@@ -1,12 +1,6 @@
 USE [compare]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[compare_groups](
 	[compare_group_id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [nvarchar](64) NOT NULL,
@@ -23,15 +17,15 @@ CREATE TABLE [dbo].[compare_groups_facilities](
 )
 GO
 
-ALTER TABLE [dbo].[compare_groups_facilities]  WITH CHECK ADD  CONSTRAINT [FK_compare_groups_facilities_compare_groups] FOREIGN KEY([compare_group_id])
-REFERENCES [dbo].[compare_groups] ([compare_group_id])
-ON DELETE CASCADE
-GO
-
 CREATE TABLE [dbo].[compare_groups_users](
 	[user_id] [nchar](36) NOT NULL,
 	[compare_group_id] [int] NOT NULL
 )
+GO
+
+ALTER TABLE [dbo].[compare_groups_facilities]  WITH CHECK ADD  CONSTRAINT [FK_compare_groups_facilities_compare_groups] FOREIGN KEY([compare_group_id])
+REFERENCES [dbo].[compare_groups] ([compare_group_id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[compare_groups_users]  WITH CHECK ADD  CONSTRAINT [FK_compare_groups_users_compare_groups] FOREIGN KEY([compare_group_id])
