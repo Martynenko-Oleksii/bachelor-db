@@ -1,12 +1,6 @@
 USE [file]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[file_mappings](
 	[file_mapping_id] [int] IDENTITY(1,1) NOT NULL,
 	[file_type_id] [int] NULL,
@@ -17,11 +11,6 @@ CREATE TABLE [dbo].[file_mappings](
 	[created_by] [nchar](36) NOT NULL,
  CONSTRAINT [PK_file_mappings] PRIMARY KEY ([file_mapping_id] ASC)
 )
-GO
-
-ALTER TABLE [dbo].[file_mappings]  WITH CHECK ADD  CONSTRAINT [FK_file_mappings_file_types] FOREIGN KEY([file_type_id])
-REFERENCES [dbo].[file_types] ([file_type_id])
-ON DELETE SET NULL
 GO
 
 CREATE TABLE [dbo].[file_types](
@@ -40,11 +29,6 @@ CREATE TABLE [dbo].[files](
 )
 GO
 
-ALTER TABLE [dbo].[files]  WITH CHECK ADD  CONSTRAINT [FK_files_file_mappings] FOREIGN KEY([file_mapping_id])
-REFERENCES [dbo].[file_mappings] ([file_mapping_id])
-ON DELETE SET NULL
-GO
-
 CREATE TABLE [dbo].[upload_logs](
 	[upload_log_id] [int] IDENTITY(1,1) NOT NULL,
 	[fyle_type_id] [int] NULL,
@@ -59,6 +43,16 @@ CREATE TABLE [dbo].[upload_logs](
 	[time_period] [nvarchar](16) NOT NULL,
  CONSTRAINT [PK_upload_logs] PRIMARY KEY ([upload_log_id] ASC)
 )
+GO
+
+ALTER TABLE [dbo].[file_mappings]  WITH CHECK ADD  CONSTRAINT [FK_file_mappings_file_types] FOREIGN KEY([file_type_id])
+REFERENCES [dbo].[file_types] ([file_type_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[files]  WITH CHECK ADD  CONSTRAINT [FK_files_file_mappings] FOREIGN KEY([file_mapping_id])
+REFERENCES [dbo].[file_mappings] ([file_mapping_id])
+ON DELETE SET NULL
 GO
 
 ALTER TABLE [dbo].[upload_logs]  WITH CHECK ADD  CONSTRAINT [FK_upload_logs_file_types] FOREIGN KEY([fyle_type_id])
