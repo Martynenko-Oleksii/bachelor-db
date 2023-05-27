@@ -1,12 +1,6 @@
 USE [data]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[accounts](
 	[code] [nvarchar](16) NOT NULL,
 	[description] [nvarchar](64) NULL,
@@ -26,11 +20,6 @@ CREATE TABLE [dbo].[cost_centers](
 	[department_id] [int] NULL,
  CONSTRAINT [PK_cost_centers] PRIMARY KEY ([number] ASC)
 )
-GO
-
-ALTER TABLE [dbo].[cost_centers]  WITH CHECK ADD  CONSTRAINT [FK_cost_centers_departments] FOREIGN KEY([department_id])
-REFERENCES [dbo].[departments] ([department_id])
-ON DELETE SET NULL
 GO
 
 CREATE TABLE [dbo].[department_elements](
@@ -63,6 +52,26 @@ CREATE TABLE [dbo].[GL_RP_mappings](
 )
 GO
 
+CREATE TABLE [dbo].[time_periods](
+	[time_period_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](16) NOT NULL,
+	[status] [nvarchar](8) NOT NULL,
+ CONSTRAINT [PK_time_periods] PRIMARY KEY ([time_period_id] ASC)
+) 
+GO
+
+CREATE TABLE [dbo].[value_types](
+	[value_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](64) NOT NULL,
+ CONSTRAINT [PK_value_type] PRIMARY KEY ([value_type_id] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[cost_centers]  WITH CHECK ADD  CONSTRAINT [FK_cost_centers_departments] FOREIGN KEY([department_id])
+REFERENCES [dbo].[departments] ([department_id])
+ON DELETE SET NULL
+GO
+
 ALTER TABLE [dbo].[GL_RP_mappings]  WITH CHECK ADD  CONSTRAINT [FK_GL_RP_mappings_accounts] FOREIGN KEY([account_code])
 REFERENCES [dbo].[accounts] ([code])
 ON DELETE CASCADE
@@ -80,19 +89,4 @@ GO
 
 ALTER TABLE [dbo].[GL_RP_mappings]  WITH CHECK ADD  CONSTRAINT [FK_GL_RP_mappings_value_types] FOREIGN KEY([valur_type_id])
 REFERENCES [dbo].[value_types] ([value_type_id])
-GO
-
-CREATE TABLE [dbo].[time_periods](
-	[time_period_id] [int] IDENTITY(1,1) NOT NULL,
-	[name] [nvarchar](16) NOT NULL,
-	[status] [nvarchar](8) NOT NULL,
- CONSTRAINT [PK_time_periods] PRIMARY KEY ([time_period_id] ASC)
-) 
-GO
-
-CREATE TABLE [dbo].[value_types](
-	[value_type_id] [int] IDENTITY(1,1) NOT NULL,
-	[name] [nvarchar](64) NOT NULL,
- CONSTRAINT [PK_value_type] PRIMARY KEY ([value_type_id] ASC)
-)
 GO
