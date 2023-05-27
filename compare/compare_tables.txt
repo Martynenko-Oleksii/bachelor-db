@@ -13,13 +13,15 @@ GO
 
 CREATE TABLE [dbo].[compare_groups_facilities](
 	[facility_id] [int] NOT NULL,
-	[compare_group_id] [int] NOT NULL
+	[compare_group_id] [int] NOT NULL,
+ CONSTRAINT [PK_compare_groups_facilities] PRIMARY KEY ([facility_id] ASC, [compare_group_id] ASC)
 )
 GO
 
 CREATE TABLE [dbo].[compare_groups_users](
 	[user_id] [nchar](36) NOT NULL,
-	[compare_group_id] [int] NOT NULL
+	[compare_group_id] [int] NOT NULL,
+ CONSTRAINT [PK_compare_groups_users] PRIMARY KEY ([user_id] ASC, [compare_group_id] ASC)
 )
 GO
 
