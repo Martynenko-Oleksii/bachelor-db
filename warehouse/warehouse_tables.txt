@@ -73,6 +73,7 @@ CREATE TABLE [dbo].[time_periods](
 	[short_name] [nvarchar](38) NOT NULL,
 	[start_date] [date] NOT NULL,
 	[end_date] [date] NOT NULL,
+	[type] [nchar](1) NOT NULL,
  CONSTRAINT [PK_time_periods] PRIMARY KEY ([time_period_id] ASC)
 ) 
 GO
