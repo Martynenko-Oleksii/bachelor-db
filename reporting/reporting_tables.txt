@@ -1,12 +1,6 @@
 USE [reporting]
 GO
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[queues](
 	[queue_id] [int] IDENTITY(1,1) NOT NULL,
 	[queue_type] [bit] NOT NULL,
@@ -17,11 +11,6 @@ CREATE TABLE [dbo].[queues](
 )
 GO
 
-ALTER TABLE [dbo].[queues]  WITH CHECK ADD  CONSTRAINT [FK_queues_statuses] FOREIGN KEY([status_id])
-REFERENCES [dbo].[statuses] ([status_id])
-ON DELETE SET NULL
-GO
-
 CREATE TABLE [dbo].[queues_archive](
 	[queue_id] [int] IDENTITY(1,1) NOT NULL,
 	[queue_type] [bit] NOT NULL,
@@ -30,11 +19,6 @@ CREATE TABLE [dbo].[queues_archive](
 	[entity_id] [int] NOT NULL,
  CONSTRAINT [PK_queues_archive] PRIMARY KEY ([queue_id] ASC)
 )
-GO
-
-ALTER TABLE [dbo].[queues_archive]  WITH CHECK ADD  CONSTRAINT [FK_queues_archive_statuses] FOREIGN KEY([status_id])
-REFERENCES [dbo].[statuses] ([status_id])
-ON DELETE SET NULL
 GO
 
 CREATE TABLE [dbo].[report_types](
@@ -59,25 +43,10 @@ CREATE TABLE [dbo].[reports](
 ) 
 GO
 
-ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_report_types] FOREIGN KEY([report_type_id])
-REFERENCES [dbo].[report_types] ([report_type_id])
-ON DELETE SET NULL
-GO
-
-ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_statuses] FOREIGN KEY([status_id])
-REFERENCES [dbo].[statuses] ([status_id])
-ON DELETE SET NULL
-GO
-
 CREATE TABLE [dbo].[reports_users](
 	[user_id] [int] NOT NULL,
 	[report_id] [int] NOT NULL
 ) 
-GO
-
-ALTER TABLE [dbo].[reports_users]  WITH CHECK ADD  CONSTRAINT [FK_reports_users_reports] FOREIGN KEY([report_id])
-REFERENCES [dbo].[reports] ([report_id])
-ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[statuses](
@@ -102,6 +71,37 @@ CREATE TABLE [dbo].[templates](
 ) 
 GO
 
+CREATE TABLE [dbo].[templates_users](
+	[user_id] [nchar](36) NOT NULL,
+	[template_id] [int] NOT NULL
+) 
+GO
+
+ALTER TABLE [dbo].[queues]  WITH CHECK ADD  CONSTRAINT [FK_queues_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[queues_archive]  WITH CHECK ADD  CONSTRAINT [FK_queues_archive_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_report_types] FOREIGN KEY([report_type_id])
+REFERENCES [dbo].[report_types] ([report_type_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[reports]  WITH CHECK ADD  CONSTRAINT [FK_reports_statuses] FOREIGN KEY([status_id])
+REFERENCES [dbo].[statuses] ([status_id])
+ON DELETE SET NULL
+GO
+
+ALTER TABLE [dbo].[reports_users]  WITH CHECK ADD  CONSTRAINT [FK_reports_users_reports] FOREIGN KEY([report_id])
+REFERENCES [dbo].[reports] ([report_id])
+ON DELETE CASCADE
+GO
+
 ALTER TABLE [dbo].[templates]  WITH CHECK ADD  CONSTRAINT [FK_templates_report_types] FOREIGN KEY([report_type_id])
 REFERENCES [dbo].[report_types] ([report_type_id])
 ON DELETE SET NULL
@@ -110,12 +110,6 @@ GO
 ALTER TABLE [dbo].[templates]  WITH CHECK ADD  CONSTRAINT [FK_templates_statuses] FOREIGN KEY([status_id])
 REFERENCES [dbo].[statuses] ([status_id])
 ON DELETE SET NULL
-GO
-
-CREATE TABLE [dbo].[templates_users](
-	[user_id] [nchar](36) NOT NULL,
-	[template_id] [int] NOT NULL
-) 
 GO
 
 ALTER TABLE [dbo].[templates_users]  WITH CHECK ADD  CONSTRAINT [FK_templates_users_templates] FOREIGN KEY([template_id])
