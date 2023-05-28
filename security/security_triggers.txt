@@ -1,0 +1,50 @@
+USE [security]
+GO
+
+CREATE TRIGGER trg_department_groups_insert
+ON department_groups
+AFTER INSERT
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT customer_id
+        FROM customers
+        WHERE customer_id IN (SELECT customer_id FROM inserted)
+    )
+    BEGIN
+        DELETE FROM department_groups WHERE department_group_id IN (SELECT department_group_id FROM inserted)
+    END
+END
+GO
+
+CREATE TRIGGER trg_facility_groups_insert
+ON facility_groups
+AFTER INSERT
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT customer_id
+        FROM customers
+        WHERE customer_id IN (SELECT customer_id FROM inserted)
+    )
+    BEGIN
+        DELETE FROM facility_groups WHERE facility_group_id IN (SELECT facility_group_id FROM inserted)
+    END
+END
+GO
+
+CREATE TRIGGER trg_users_customers_insert
+ON users_customers
+AFTER INSERT
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT customer_id
+        FROM customers
+        WHERE customer_id IN (SELECT customer_id FROM inserted)
+    )
+    BEGIN
+        DELETE FROM users_customers WHERE user_id IN (SELECT user_id FROM inserted)
+    END
+END
+GO
