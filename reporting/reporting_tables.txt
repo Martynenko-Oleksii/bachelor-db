@@ -37,7 +37,7 @@ CREATE TABLE [dbo].[reports](
 	[created_by] [nchar](36) NOT NULL,
 	[owned_by] [nchar](36) NOT NULL,
 	[created_under] [int] NOT NULL,
-	[template_mongo_id] [nchar](24) NULL,
+	[template_mongo_id] [nchar](24) NOT NULL,
 	[report_type_id] [int] NULL,
  CONSTRAINT [PK_reports] PRIMARY KEY  ([report_id] ASC)
 ) 
